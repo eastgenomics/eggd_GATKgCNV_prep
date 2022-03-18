@@ -1,8 +1,5 @@
 #!/bin/bash
 # GATK_prepIntervals_dev
-#
-# Any code outside of main() (or any entry point you may add) is
-# ALWAYS executed, followed by running the entry point itself.
 
 # Exit at any point if there is any error and output each line as it is executed (for debugging)
 set -e -x -o pipefail
@@ -12,7 +9,7 @@ main() {
     # Load the GATK docker image
     dx download "$GATK_docker" -o GATK.tar.gz
     docker load -i GATK.tar.gz
-    GATK_image=$(docker images --format="{{.Repository}} {{.ID}}" | grep "^broad" | cut -d' ' -f2) 
+    GATK_image=$(docker images --format="{{.Repository}} {{.ID}}" | grep "^broad" | cut -d' ' -f2)
 
     ## Create folder to collect input files:
     mkdir inputs
@@ -20,7 +17,6 @@ main() {
 
     # Reference genome fasta, fai, dict
     dx download "$reference_genome" -o ref_gen.fasta-index.tar.gz
-    # project-FzyfP204Z5qXBp6696jG5g10:file-F3zxG0Q4fXX9YFjP1v5jK9jf
     tar -xvzf ref_gen.fasta-index.tar.gz
 
     # Intervals file (either capture bed or targeted exons bed)
@@ -28,6 +24,7 @@ main() {
     sed -i 's/^chr//' capture.bed
     sort -k1V -k2n capture.bed > capture_targets.bed
 
+    # Add annotation to intervals if requested and annotation bed file is provided
     # Mappability
     if $toAnnotateMap; then
         if [[ ! -z $mappability_bed ]]; then
@@ -35,6 +32,7 @@ main() {
             dx download "$mappability_bed" -o mappability.bed
             sed -i 's/^chr//' mappability.bed
             sort -k1V -k2n mappability.bed > mappability_merged.bed
+            # sorted bed file needs to be indexed by GATK for later use
             docker run -v /home/dnanexus/inputs:/data $GATK_image gatk IndexFeatureFile \
                 -I /data/mappability_merged.bed
         else
@@ -43,7 +41,6 @@ main() {
         fi
         # head mappability_merged.bed
         map_track="--mappability-track /data/mappability_merged.bed"
-
     else
         map_tracks=""
     fi
@@ -59,15 +56,14 @@ main() {
             dx download project-FzyfP204Z5qXBp6696jG5g10:file-G44VP9Q4Z5qf3jVP4p5K482v -o beds/segdup.bed
             sort -k1V -k2n segdup.bed > segmental_duplication.bed
         fi
-        # head segmental_duplication.bed
+        # sorted bed file needs to be indexed by GATK for later use
         docker run -v /home/dnanexus/inputs:/data $GATK_image gatk IndexFeatureFile \
             -I /data/segmental_duplication.bed
         segdup_track="--segmental-duplication-track /data/segmental_duplication.bed"
-
     else
         segdup_track=""
     fi
-    
+
     echo "All input files have downloaded to inputs/"
     cd ..
 
@@ -80,7 +76,7 @@ main() {
         --bin-length $bin_length --padding $padding \
         -O /data/preprocessed.interval_list
 
-    # B. Run AnnotateIntervals: --verbosity DEBUG 
+    # B. Run AnnotateIntervals: --verbosity DEBUG
     echo "Running AnnotateIntervals for the preprocessed interval list"
     /usr/bin/time -v docker run -v /home/dnanexus/inputs:/data $GATK_image gatk AnnotateIntervals \
         -R /data/genome.fa \

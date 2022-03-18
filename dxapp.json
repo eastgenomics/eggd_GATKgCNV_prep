@@ -11,7 +11,7 @@
       "class": "file",
       "optional": false,
       "patterns": [ "*.tar", "*.tar.gz"],
-      "help": "sorted in chromosome order",
+      "help": "tar of the Docker image for GATK",
       "suggestions": [
         {
           "project": "project-FzyfP204Z5qXBp6696jG5g10",
@@ -81,7 +81,8 @@
       "label": "Mappabilty bed file",
       "class": "file",
       "optional": true,
-      "patterns": ["*.bed"]
+      "patterns": ["*.bed"],
+      "help": "mappability track bed file for annotation"
     },
     {
       "name": "toAnnotateSegDup",
@@ -96,7 +97,8 @@
       "label": "Segmental duplication bed file",
       "class": "file",
       "optional": true,
-      "patterns": ["*.bed"]
+      "patterns": ["*.bed"],
+      "help": "segmental duplication bed file for annotation"
     }
   ],
   "outputSpec": [
@@ -116,7 +118,12 @@
     "release": "20.04",
     "version": "0",
     "interpreter": "bash",
-    "file": "src/GATK_prep.sh"
+    "file": "src/GATK_prep.sh",
+    "timeoutPolicy": {
+      "*": {
+        "hours": 1
+      }
+
   },
   "access": {
     "allProjects": "VIEW",
