@@ -39,7 +39,6 @@ main() {
             dx download project-FzyfP204Z5qXBp6696jG5g10:file-G44VKQ84Z5qZJ3fx9x4GVJ4G -o mappability_merged.bed
             dx download project-FzyfP204Z5qXBp6696jG5g10:file-G44VKX84Z5qffyfq1yBk6Gk3 -o mappability_merged.bed.idx
         fi
-        # head mappability_merged.bed
         map_track="--mappability-track /data/mappability_merged.bed"
     else
         map_tracks=""
