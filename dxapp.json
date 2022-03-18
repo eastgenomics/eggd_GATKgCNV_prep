@@ -1,0 +1,137 @@
+{
+  "name": "GATK_prepIntervals_v0.0.1",
+  "title": "GATK_prepIntervals_v0.0.1",
+  "summary": "Dx wrapper to run the GATK Preprocess and AnnotateIntervals steps",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "inputSpec": [
+    {
+      "name": "GATK_docker",
+      "label": "GATK docker image tar.gz",
+      "class": "file",
+      "optional": false,
+      "patterns": [ "*.tar", "*.tar.gz"],
+      "help": "sorted in chromosome order",
+      "suggestions": [
+        {
+          "project": "project-FzyfP204Z5qXBp6696jG5g10",
+          "path": "/apps/GATK/"
+        }
+      ]
+    },
+    {
+      "name": "reference_genome",
+      "label": "reference genome fasta-index.tar.gz",
+      "class": "file",
+      "optional": false,
+      "patterns": ["*.tar.gz"],
+      "help": "reference genome fasta and index files tarred",
+      "suggestions": [
+        {
+          "project": "project-Fkb6Gkj433GVVvj73J7x8KbV",
+          "path": "/genomes/b37/"
+        },
+        {
+          "project": "project-Fkb6Gkj433GVVvj73J7x8KbV",
+          "path": "/genomes/b38/"
+        }
+      ]
+    },
+    {
+      "name": "bed_file",
+      "label": "target BED file",
+      "class": "file",
+      "optional": false,
+      "patterns": ["*.bed", "*.tsv"],
+      "help": "sorted in chromosome order"
+    },
+    {
+      "name": "filename",
+      "label": "prefix for output file",
+      "class": "string",
+      "optional": false,
+      "help": "string for output filename, eg CEN_padding_b37"
+    },
+    {
+      "name": "padding",
+      "label": "padding",
+      "class": "int",
+      "optional": true,
+      "default": 0,
+      "help": "number of bases to pad the intervals, defaults to 0"
+    },
+    {
+      "name": "bin_length",
+      "label": "bin_length",
+      "class": "int",
+      "optional": true,
+      "default": 0,
+      "help": "number of bases per bin, defaults to 0"
+    },
+    {
+      "name": "toAnnotateMap",
+      "label": "AnnotateMappability",
+      "class": "boolean",
+      "optional": true,
+      "default": false,
+      "help": "Whether to AnnotateIntervals with the provided mappability track"
+    },
+    {
+      "name": "mappability_bed",
+      "label": "Mappabilty bed file",
+      "class": "file",
+      "optional": true,
+      "patterns": ["*.bed"]
+    },
+    {
+      "name": "toAnnotateSegDup",
+      "label": "AnnotateSegDup",
+      "class": "boolean",
+      "optional": true,
+      "default": false,
+      "help": "Whether to AnnotateIntervals with the provided segmental duplication track"
+    },
+    {
+      "name": "segdup_bed",
+      "label": "Segmental duplication bed file",
+      "class": "file",
+      "optional": true,
+      "patterns": ["*.bed"]
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "interval_list",
+      "label": "PreprocessedIntervals list from the input bed",
+      "class": "file"
+    },
+    {
+      "name": "interval_annotation",
+      "label": "AnntotateIntervals tsv of the preprocessed bed",
+      "class": "file"
+    }
+  ],
+  "runSpec": {
+    "distribution": "Ubuntu",
+    "release": "20.04",
+    "version": "0",
+    "interpreter": "bash",
+    "file": "src/GATK_prep.sh"
+  },
+  "access": {
+    "allProjects": "VIEW",
+    "project": "CONTRIBUTE",
+    "network": [
+      "*"
+    ]
+  },
+  "regionalOptions": {
+    "aws:eu-central-1": {
+      "systemRequirements": {
+        "*": {
+          "instanceType": "mem1_ssd1_v2_x2"
+        }
+      }
+    }
+  }
+}
