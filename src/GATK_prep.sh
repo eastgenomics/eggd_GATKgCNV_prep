@@ -36,12 +36,12 @@ main() {
             docker run -v /home/dnanexus/inputs:/data $GATK_image gatk IndexFeatureFile \
                 -I /data/mappability_merged.bed
         else
-            dx download project-FzyfP204Z5qXBp6696jG5g10:file-G44VKQ84Z5qZJ3fx9x4GVJ4G -o mappability_merged.bed
-            dx download project-FzyfP204Z5qXBp6696jG5g10:file-G44VKX84Z5qffyfq1yBk6Gk3 -o mappability_merged.bed.idx
+            echo "No mappability track was provided, cannot annotate without it"
+            exit 1
         fi
         map_track="--mappability-track /data/mappability_merged.bed"
     else
-        map_tracks=""
+        map_track=""
     fi
 
     # Segmental duplication
@@ -52,8 +52,8 @@ main() {
             sed -i 's/^chr//' segdup.bed
             sort -k1V -k2n segdup.bed > segmental_duplication.bed
         else
-            dx download project-FzyfP204Z5qXBp6696jG5g10:file-G44VP9Q4Z5qf3jVP4p5K482v -o beds/segdup.bed
-            sort -k1V -k2n segdup.bed > segmental_duplication.bed
+            echo "No segmental duplication track was provided, cannot annotate without it"
+            exit 1
         fi
         # sorted bed file needs to be indexed by GATK for later use
         docker run -v /home/dnanexus/inputs:/data $GATK_image gatk IndexFeatureFile \

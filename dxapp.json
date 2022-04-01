@@ -1,9 +1,9 @@
 {
-  "name": "GATK_prepIntervals_v0.0.1",
-  "title": "GATK_prepIntervals_v0.0.1",
+  "name": "GATKgCNV_prep",
+  "title": "GATKgCNV_prep",
   "summary": "Dx wrapper to run the GATK Preprocess and AnnotateIntervals steps",
   "dxapi": "1.0.0",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "inputSpec": [
     {
       "name": "GATK_docker",
@@ -123,8 +123,15 @@
       "*": {
         "hours": 1
       }
-
+    }
   },
+  "developers":[
+    "user-sophier",
+    "org-emee_1"
+  ],
+  "authorizedUsers": [
+    "org-emee_1"
+  ],
   "access": {
     "allProjects": "VIEW",
     "project": "CONTRIBUTE",

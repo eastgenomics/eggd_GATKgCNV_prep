@@ -1,7 +1,8 @@
 <!-- dx-header -->
 # Prepare target intervals for GATK gCNVcaller (DNAnexus Platform App)
 
-Dx wrapper to run the GATK PreprocessIntervals and AnnotateIntervals
+Dx wrapper to run the GATK PreprocessIntervals and AnnotateIntervals.
+
 This is the source code for an app that runs on the DNAnexus Platform.
 
 <!-- Insert a description of your app here -->
@@ -13,25 +14,25 @@ This app may be executed for assays to generate a target interval list file to b
 
 ## What data are required for this app to run?
 This app requires:
-* GATK Docker image tar (-iGATK_docker)
-* reference genome fasta and index tar (-ireference_genome)
-* BED file, sorted in chromosome order (-iinterval_list)
-* number of base pairs to pad regions with on either side (-ipadding)
-* length of bins in which to determine CNV state (-ibin_length)
+* GATK Docker image tar (`-iGATK_docker`)
+* reference genome fasta and index tar (`-ireference_genome`) must have a `genome.fa` and `genome.fai` after unpacking the tar
+* BED file, sorted in chromosome order (`-iinterval_list`)
+* number of base pairs to pad regions with on either side (`-ipadding`)
+* length of bins in which to determine CNV state (`-ibin_length`)
 
 
 Optional inputs:
-* toAnnotateMap can be set TRUE/FALSE depending on whether intervals should be annotated with mappability information
+* toAnnotateMap: can be set TRUE/FALSE depending on whether intervals should be annotated with mappability information
 * if TRUE, must provide a mappability track bed file
-* toAnnotateSegDup can be set TRUE/FALSE depending on whether intervals should be annotated with segmental duplication information
+* toAnnotateSegDup: can be set TRUE/FALSE depending on whether intervals should be annotated with segmental duplication information
 * if TRUE, must provide a segmental duplication track bed file
 * (exclusion BED file listing regions that should be excluded from CNV calling)  - not currently supported
 
 ## What does this app output?
-* .interval_list in Picard-style format that can be used directly as input to the CNV calling stage
+* interval_list in Picard-style format that can be used directly as input to the CNV calling stage
 * corresponding annotation.tsv that can be used directly as input to the CNV calling stage
 
 ## Dependencies
-The app requires a tar.gz of the Docker image for GATK 4, and a reference genome fasta and index files as input.
+The app requires a tar.gz of the Docker image for GATK 4.2+ and a tar of the reference genome fasta and index files.
 
 ### This app was made by East GLH
