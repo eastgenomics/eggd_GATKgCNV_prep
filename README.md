@@ -1,7 +1,8 @@
 <!-- dx-header -->
 # Prepare target intervals for GATK gCNVcaller (DNAnexus Platform App)
 
-Dx wrapper to run the GATK PreprocessIntervals and AnnotateIntervals
+Dx wrapper to run the GATK PreprocessIntervals and AnnotateIntervals.
+
 This is the source code for an app that runs on the DNAnexus Platform.
 
 <!-- Insert a description of your app here -->
