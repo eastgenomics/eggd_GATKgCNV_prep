@@ -1,5 +1,5 @@
 #!/bin/bash
-# GATK_prepIntervals_dev
+# GATKgCNV_prep
 
 # Exit at any point if there is any error and output each line as it is executed (for debugging)
 set -e -x -o pipefail
@@ -9,6 +9,7 @@ main() {
     # Load the GATK docker image
     dx download "$GATK_docker" -o GATK.tar.gz
     docker load -i GATK.tar.gz
+    # Parse the image ID from the list of docker images
     GATK_image=$(docker images --format="{{.Repository}} {{.ID}}" | grep "^broad" | cut -d' ' -f2)
 
     ## Create folder to collect input files:
@@ -22,7 +23,7 @@ main() {
     # Intervals file (either capture bed or targeted exons bed)
     dx download "$bed_file" -o capture.bed
     sed -i 's/^chr//' capture.bed
-    sort -k1V -k2n capture.bed > capture_targets.bed
+    sort -k1V -k2n -k3n capture.bed > capture_targets.bed
 
     # Add annotation to intervals if requested and annotation bed file is provided
     # Mappability
@@ -31,7 +32,7 @@ main() {
             echo "Mappability track is provided as '$mappability_bed'"
             dx download "$mappability_bed" -o mappability.bed
             sed -i 's/^chr//' mappability.bed
-            sort -k1V -k2n mappability.bed > mappability_merged.bed
+            sort -k1V -k2n -k3n mappability.bed > mappability_merged.bed
             # sorted bed file needs to be indexed by GATK for later use
             docker run -v /home/dnanexus/inputs:/data $GATK_image gatk IndexFeatureFile \
                 -I /data/mappability_merged.bed
@@ -50,7 +51,7 @@ main() {
             echo "Segmental duplication track is provided as '$segdup_bed'"
             dx download "$segdup_bed" -o segdup.bed
             sed -i 's/^chr//' segdup.bed
-            sort -k1V -k2n segdup.bed > segmental_duplication.bed
+            sort -k1V -k2n -k3n segdup.bed > segmental_duplication.bed
         else
             echo "No segmental duplication track was provided, cannot annotate without it"
             exit 1
@@ -86,11 +87,11 @@ main() {
     echo "All scripts finished successfully, collecting output files to be uploaded to dx"
 
     ## Create outdir and move result files in to be uploaded
-    cp inputs/preprocessed.interval_list "$filename".interval_list
+    mv inputs/preprocessed.interval_list "$filename".interval_list
     interval_list=$(dx upload "$filename".interval_list --brief)
     dx-jobutil-add-output interval_list "$interval_list" --class=file
 
-    cp inputs/annotated_intervals.tsv "$filename"_annotation.tsv
+    mv inputs/annotated_intervals.tsv "$filename"_annotation.tsv
     interval_annotation=$(dx upload "$filename"_annotation.tsv --brief)
     dx-jobutil-add-output interval_annotation "$interval_annotation" --class=file
 
