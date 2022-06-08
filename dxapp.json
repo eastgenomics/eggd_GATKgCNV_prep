@@ -14,9 +14,9 @@
       "help": "tar of the Docker image for GATK",
       "suggestions": [
         {
-          "project": "project-FzyfP204Z5qXBp6696jG5g10",
-          "path": "/apps/GATK/"
-        }
+          "project": "project-Fkb6Gkj433GVVvj73J7x8KbV",
+          "path": "/assets/GATK/"
+      }
       ]
     },
     {
@@ -82,7 +82,18 @@
       "class": "file",
       "optional": true,
       "patterns": ["*.bed"],
-      "help": "mappability track bed file for annotation"
+      "help": "mappability track bed file for annotation",
+      "suggestions": [
+        {
+          "project": "project-Fkb6Gkj433GVVvj73J7x8KbV",
+          "path": "/bed_files/b37/"
+        },
+        {
+          "project": "project-Fkb6Gkj433GVVvj73J7x8KbV",
+          "path": "/bed_files/b38/"
+          }
+      ]
+
     },
     {
       "name": "toAnnotateSegDup",
